@@ -2,6 +2,7 @@ package axe;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import io.javalin.vue.VueComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ public class Axe {
                 config.showJavalinBanner = false;
                 config.staticFiles.enableWebjars();
                 config.staticFiles.add("public", Location.CLASSPATH);
+                config.vue.vueAppName = "app";
             });
 
             Runtime.getRuntime().addShutdownHook(new Thread(app::stop));
@@ -30,7 +32,7 @@ public class Axe {
             int port = Helper.configAsInt("port");
             app.start(host, port);
 
-            app.get("/", context -> context.result("Hello Axe!"));
+            app.get("/", new VueComponent("welcome"));
         }
         catch (Exception e) {
             LOGGER.error("Error starting Axe", e);
